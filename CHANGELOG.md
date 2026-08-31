@@ -12,7 +12,10 @@ the product is unpublished. Latest release is the first numbered section below.
 
 ## [Unreleased]
 
-_Nothing queued — latest release: **0.1.0**._
+### Changed
+
+- VirusTotal workflow: `actions/upload-artifact@v4` → `@v7` (Node 24). GitHub
+  hosted runners deprecated Node 20 and warn when v4 runs on Node 24 runners.
 
 ## [0.1.0] - 2026-08-24
 
