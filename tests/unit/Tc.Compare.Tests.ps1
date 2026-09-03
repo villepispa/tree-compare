@@ -149,17 +149,121 @@ Describe 'Compare-TcTree' {
         $r.LengthMismatchCount | Should -Be 0
     }
 
-    It 'unimplemented engine returns Error' {
-        $a = Join-Path $TestDrive 'eng-a'
-        $b = Join-Path $TestDrive 'eng-b'
-        New-Item -ItemType Directory -Path $a, $b | Out-Null
-        $r = Compare-TcTree -PathA $a -PathB $b -Engine Robocopy -Quiet
-        $r.Verdict | Should -Be 'Error'
-        $r.Error | Should -Match 'TC-002'
-        (Get-TcCompareExitCode -Result $r) | Should -Be 3
+    It 'Robocopy Speed is Identical when metadata matches' {
+        $a = Join-Path $TestDrive 'rc-ident-a'
+        $b = Join-Path $TestDrive 'rc-ident-b'
+        New-Item -ItemType Directory -Path (Join-Path $a 'n') | Out-Null
+        New-Item -ItemType Directory -Path (Join-Path $b 'n') | Out-Null
+        'same' | Set-Content -LiteralPath (Join-Path $a 'n\x.bin') -Encoding utf8
+        Copy-Item -LiteralPath (Join-Path $a 'n\x.bin') -Destination (Join-Path $b 'n\x.bin')
+        $stamp = [datetime]::UtcNow.AddDays(-2)
+        (Get-Item -LiteralPath (Join-Path $a 'n\x.bin')).LastWriteTimeUtc = $stamp
+        (Get-Item -LiteralPath (Join-Path $b 'n\x.bin')).LastWriteTimeUtc = $stamp
+
+        $r = Compare-TcTree -PathA $a -PathB $b -Mode Speed -Engine Robocopy -Quiet
+        $r.Verdict | Should -Be 'Identical'
+        $r.Engine | Should -Be 'Robocopy'
+        $r.HashedCount | Should -Be 0
+        (Get-TcCompareExitCode -Result $r) | Should -Be 0
     }
 
-    It 'Format-TcAgentSummary starts with TC-COMPARE-OK for Identical' {
+    It 'Robocopy Speed TimestampSuspect maps Older/Newer/Tweaked; Accuracy engine is rejected' {
+        $a = Join-Path $TestDrive 'rc-ts-a'
+        $b = Join-Path $TestDrive 'rc-ts-b'
+        New-Item -ItemType Directory -Path $a, $b | Out-Null
+        'payload' | Set-Content -LiteralPath (Join-Path $a 'drv.sys') -Encoding utf8
+        Copy-Item -LiteralPath (Join-Path $a 'drv.sys') -Destination (Join-Path $b 'drv.sys')
+        (Get-Item -LiteralPath (Join-Path $b 'drv.sys')).LastWriteTimeUtc =
+            (Get-Item -LiteralPath (Join-Path $a 'drv.sys')).LastWriteTimeUtc.AddHours(3)
+
+        $speed = Compare-TcTree -PathA $a -PathB $b -Mode Speed -Engine Robocopy -Quiet
+        $speed.Verdict | Should -Be 'TimestampSuspect'
+        $speed.TimestampOnly | Should -BeTrue
+        $speed.HashedCount | Should -Be 0
+        (Get-TcCompareExitCode -Result $speed) | Should -Be 1
+
+        $acc = Compare-TcTree -PathA $a -PathB $b -Mode Accuracy -Engine Robocopy -Quiet
+        $acc.Verdict | Should -Be 'Error'
+        $acc.Error | Should -Match 'Hybrid|Native'
+        (Get-TcCompareExitCode -Result $acc) | Should -Be 3
+    }
+
+    It 'Hybrid Speed is timestamp-suspect then Hybrid Accuracy hashes Identical' {
+        $a = Join-Path $TestDrive 'hy-a'
+        $b = Join-Path $TestDrive 'hy-b'
+        New-Item -ItemType Directory -Path $a, $b | Out-Null
+        'payload' | Set-Content -LiteralPath (Join-Path $a 'drv.sys') -Encoding utf8
+        Copy-Item -LiteralPath (Join-Path $a 'drv.sys') -Destination (Join-Path $b 'drv.sys')
+        (Get-Item -LiteralPath (Join-Path $b 'drv.sys')).LastWriteTimeUtc =
+            (Get-Item -LiteralPath (Join-Path $a 'drv.sys')).LastWriteTimeUtc.AddHours(3)
+
+        $speed = Compare-TcTree -PathA $a -PathB $b -Mode Speed -Engine Hybrid -Quiet
+        $speed.Verdict | Should -Be 'TimestampSuspect'
+        $speed.Engine | Should -Be 'Hybrid'
+
+        $acc = Compare-TcTree -PathA $a -PathB $b -Mode Accuracy -Engine Hybrid -Quiet
+        $acc.Verdict | Should -Be 'Identical'
+        $acc.ContentEqual | Should -BeTrue
+        $acc.HashedCount | Should -Be 2
+        $acc.TimestampMismatchCount | Should -Be 0
+    }
+
+    It 'Robocopy Speed maps Extra/New to path-only and Changed to length' {
+        $a = Join-Path $TestDrive 'rc-path-a'
+        $b = Join-Path $TestDrive 'rc-path-b'
+        New-Item -ItemType Directory -Path $a, $b | Out-Null
+        'x' | Set-Content -LiteralPath (Join-Path $a 'onlyA.txt')
+        'y' | Set-Content -LiteralPath (Join-Path $b 'onlyB.txt')
+        'aa' | Set-Content -LiteralPath (Join-Path $a 'len.txt') -NoNewline
+        'aaaa' | Set-Content -LiteralPath (Join-Path $b 'len.txt') -NoNewline
+
+        $r = Compare-TcTree -PathA $a -PathB $b -Mode Speed -Engine Robocopy -Quiet
+        $r.Verdict | Should -Be 'Different'
+        $r.LeftOnlyCount | Should -BeGreaterThan 0
+        $r.RightOnlyCount | Should -BeGreaterThan 0
+        $r.LengthMismatchCount | Should -Be 1
+        $r.HashedCount | Should -Be 0
+    }
+
+    It 'Robocopy Speed /FFT absorbs a 1-second gap (FAT 2-second granularity)' {
+        $a = Join-Path $TestDrive 'rc-fft-a'
+        $b = Join-Path $TestDrive 'rc-fft-b'
+        New-Item -ItemType Directory -Path $a, $b | Out-Null
+        'fat' | Set-Content -LiteralPath (Join-Path $a 'f.bin') -NoNewline
+        Copy-Item -LiteralPath (Join-Path $a 'f.bin') -Destination (Join-Path $b 'f.bin')
+        $stamp = [datetime]::UtcNow.AddDays(-1)
+        (Get-Item -LiteralPath (Join-Path $a 'f.bin')).LastWriteTimeUtc = $stamp
+        (Get-Item -LiteralPath (Join-Path $b 'f.bin')).LastWriteTimeUtc = $stamp.AddSeconds(1)
+
+        $native = Compare-TcTree -PathA $a -PathB $b -Mode Speed -Engine Native -Quiet
+        $native.Verdict | Should -Be 'TimestampSuspect'
+
+        $robo = Compare-TcTree -PathA $a -PathB $b -Mode Speed -Engine Robocopy -Quiet
+        $robo.Verdict | Should -Be 'Identical'
+        $robo.TimestampMismatchCount | Should -Be 0
+    }
+}
+
+Describe 'ConvertFrom-TcRobocopyLog' {
+    It 'maps Extra/New/Changed/Older and tracks directory context' {
+        $fixture = Join-Path $PSScriptRoot '..\fixtures\robocopy-unilog-sample.txt'
+        $lines = Get-Content -LiteralPath $fixture
+        $parsed = ConvertFrom-TcRobocopyLog -Lines $lines -SourceRoot 'C:\tc\left' -DestRoot 'C:\tc\right'
+
+        $parsed.LeftOnly | Should -Contain 'left.txt'
+        $parsed.LeftOnly | Should -Contain 'onlya'
+        $parsed.LeftOnly | Should -Contain 'onlya/newnested.txt'
+        $parsed.RightOnly | Should -Contain 'right.txt'
+        $parsed.RightOnly | Should -Contain 'onlyb'
+        $parsed.RightOnly | Should -Contain 'sub/extra-in-sub.txt'
+        $parsed.LengthMismatch | Should -Contain 'len.txt'
+        $parsed.TimestampMismatch | Should -Contain 'tweak.txt'
+        $parsed.Same | Should -Contain 'sub/same.txt'
+    }
+}
+
+Describe 'Format-TcAgentSummary' {
+    It 'starts with TC-COMPARE-OK for Identical' {
         $a = Join-Path $TestDrive 'sum-a'
         $b = Join-Path $TestDrive 'sum-b'
         New-Item -ItemType Directory -Path $a, $b | Out-Null

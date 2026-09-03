@@ -65,6 +65,19 @@ UTC mtimes). Accuracy `Identical` is a **hash** claim (paths + lengths +
 SHA256). Timestamp is never part of **content** identity; Speed only uses it as
 a cheap stand-in. If Speed reports `TimestampSuspect`, re-run Accuracy.
 
+## Engines
+
+| Engine | Speed | Accuracy |
+|--------|-------|----------|
+| **Native** (default) | Get-ChildItem dictionaries; exact UTC mtime | SHA256 of same-path same-length files |
+| **Robocopy** | List-only `/L /FFT /DST` (FAT 2-second + DST). Extra/New → path, Changed → length, Tweaked/Newer/Older → timestamp | `Verdict=Error` — not a hash oracle |
+| **Hybrid** | Same as Robocopy | Native SHA256 on same-length pairs |
+
+```powershell
+pwsh -NoProfile -File .\scripts\Invoke-TcCompare.ps1 `
+  -PathA .\pkg-r1 -PathB .\pkg-r2 -Engine Robocopy -Profile DriverPackage
+```
+
 | Speed outcome | Verdict | ContentEqual | TimestampOnly |
 |---------------|---------|--------------|---------------|
 | Paths + length + UTC mtime all match | Identical | True | False |

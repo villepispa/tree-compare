@@ -12,6 +12,14 @@ the product is unpublished. Latest release is the first numbered section below.
 
 ## [Unreleased]
 
+### Added
+
+- **TC-002**: Robocopy and Hybrid engines. Speed uses list-only `robocopy /L
+  /E /FFT /DST /IS /IT /XJ` (Extra/New → path-only, Changed → length,
+  Tweaked/Newer/Older → timestamp). Hybrid Accuracy hashes with Native SHA256.
+  `-Engine Robocopy -Mode Accuracy` returns `Error` (not a hash oracle). Native
+  Speed still uses exact UTC mtimes.
+
 ### Changed
 
 - VirusTotal workflow: `actions/upload-artifact@v4` → `@v7` (Node 24). GitHub

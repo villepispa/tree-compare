@@ -11,6 +11,7 @@ Product issue register. IDs are stable (`TC-NNN`). Newest first.
 
 | ID | Title | Status | Notes |
 |----|-------|--------|-------|
+| TC-002 | Robocopy + Hybrid engines | done | Speed `/L` `/FFT` `/DST`; Hybrid Accuracy Native hash. Claimed `TC-VALIDATE-OK` Pester 18/18. Accepted [2026-09-03 09:01:00](../CHANGELOG.md) (user `accept`). Named acceptor Ville ≠ claimant. |
 | TC-001 | Product brief + v0.1 Native scaffold | done | Validate trio; Speed/Accuracy; DriverPackage; first public tag v0.1.0 |
 
 ## Backlog (extra ideas and next steps)
@@ -25,7 +26,6 @@ Product issue register. IDs are stable (`TC-NNN`). Newest first.
 | TC-005 | Moved-file detection | backlog | Second index by SHA256 |
 | TC-004 | Parallel SHA256 in Accuracy | backlog | `ForEach-Object -Parallel` |
 | TC-003 | Dictionary export/import | backlog | Snapshot `{RelPath,Length,LastWriteTimeUtc,Sha256?}` |
-| TC-002 | Robocopy + Hybrid engines | backlog | Speed pass `/L` `/FFT` `/DST`; Accuracy stays Native hash |
 
 ## Notes
 
@@ -40,6 +40,10 @@ engine Error. No private backlog prefixes in this tree.
 
 Map Extra/New → path-only, Changed → length, Tweaked/Newer/Older →
 timestamp. Hybrid = Robocopy Speed + Native Accuracy. Not a hash oracle.
+List-only flags: `/L /E /FFT /DST /IS /IT /XJ`. Extra Dir children are
+walked after parse so dest-only trees list files, not only the directory
+node. Accepted 2026-09-03 09:01:00 (Ville, user `accept`) ≠ claimant.
+Readback: `TC-VALIDATE-OK` Pester 18/18, PSA findings=4 errors=0.
 
 ### TC-010 — Packager
 

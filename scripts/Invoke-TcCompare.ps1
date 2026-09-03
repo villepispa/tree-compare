@@ -1,7 +1,7 @@
 #Requires -Version 7.2
 <#
 .SYNOPSIS
-  Compare two folder trees (Native engine; Speed or Accuracy).
+  Compare two folder trees (Native, Robocopy, or Hybrid).
 
 .DESCRIPTION
   **Safety tier: 1**
@@ -19,7 +19,8 @@
   Speed (default) or Accuracy.
 
 .PARAMETER Engine
-  Native (v0.1). Robocopy/Hybrid not implemented.
+  Native (default dictionaries), Robocopy (Speed-only /L /FFT /DST), or
+  Hybrid (Robocopy Speed + Native Accuracy hash).
 
 .PARAMETER CompareProfile
   Default or DriverPackage. Alias: Profile.

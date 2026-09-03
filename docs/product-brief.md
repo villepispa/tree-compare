@@ -4,7 +4,9 @@
 
 **Host floor:** PowerShell 7.2+
 **License:** MIT
-**Status:** v0.1.0 — Native engine; Speed/Accuracy; DriverPackage profile.
+**Status:** Latest release **v0.1.0** (Native). Robocopy/Hybrid is staged in
+[CHANGELOG](../CHANGELOG.md) under `[Unreleased]`; bump `ModuleVersion` only
+at the next SemVer cut.
 
 ---
 
@@ -35,11 +37,17 @@ for reputation).
 | Status | Mode banner; per-step START/DONE; `-Detailed` lists; `-AgentSummary` |
 | Exit codes | 0 / 1 / 2 / 3 |
 
+### In scope (Unreleased)
+
+| Capability | Notes |
+|------------|-------|
+| Robocopy engine | Speed list-only `/L` `/E` `/FFT` `/DST` `/IS` `/IT` `/XJ`. Extra/New → path-only, Changed → length, Tweaked/Newer/Older → timestamp. Accuracy returns `Error` (not a hash oracle). |
+| Hybrid engine | Robocopy Speed + Native SHA256 in Accuracy. |
+
 ### Out of scope (roadmap)
 
 | Capability | Tracking |
 |------------|----------|
-| Robocopy / Hybrid engines | TC-002 |
 | Dictionary export/import | TC-003 |
 | Parallel SHA256 | TC-004 |
 | Moved-file (same hash, new path) | TC-005 |
@@ -85,9 +93,19 @@ segment). Worked Speed-then-Accuracy numbers:
 
 ## Engine
 
-v0.1 implements **Native** only. `-Engine Robocopy` / `Hybrid` return
-`Verdict=Error` pointing at TC-002. Robocopy is a Speed accelerator (`/L`,
-`/FFT`, `/DST`); it cannot replace Accuracy hashing.
+**Native** (v0.1 default) walks each root into a Hashtable.
+
+**Robocopy** is a Speed accelerator: list-only `robocopy /L /E /FFT /DST /IS
+/IT /XJ`. Extra/New → path-only, Changed → length, Tweaked/Newer/Older →
+timestamp. `-Engine Robocopy -Mode Accuracy` returns `Verdict=Error`. Use
+**Hybrid** or **Native** for Accuracy.
+
+**Hybrid** = Robocopy Speed + Native SHA256 in Accuracy. Not a hash oracle.
+
+FAT timestamps have **2-second** granularity (`/FFT`) and a one-hour DST
+compensation (`/DST`); both apply only to Robocopy/Hybrid Speed. Native Speed
+still uses exact UTC equality (TC-009). A 1-second mtime gap in tests is a
+sample *inside* the 2-second window, not a 1-second spec.
 
 ## Object model (result)
 

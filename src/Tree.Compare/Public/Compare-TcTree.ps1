@@ -21,7 +21,8 @@ function Compare-TcTree {
         Accuracy: skip timestamp; hash every same-path same-length file pair.
 
     .PARAMETER Engine
-        Native (v0.1). Robocopy and Hybrid throw (product issue TC-002).
+        Native (Get-ChildItem dictionaries). Robocopy is Speed-only (/L /FFT
+        /DST). Hybrid is Robocopy Speed plus Native SHA256 in Accuracy.
 
     .PARAMETER CompareProfile
         Default or DriverPackage (ignore junk + align single child root).
@@ -108,12 +109,6 @@ function Compare-TcTree {
         }
     }
 
-    if ($Engine -ne 'Native') {
-        $msg = "Engine '$Engine' is not implemented in v0.1. See product issue TC-002. Use -Engine Native."
-        Write-TcStatus -Step Engine -Phase BANNER -Message $msg -Quiet:$Quiet
-        return & $errorResult $msg
-    }
-
     if (-not (Test-Path -LiteralPath $PathA)) {
         return & $errorResult "PathA not found: $PathA"
     }
@@ -121,9 +116,28 @@ function Compare-TcTree {
         return & $errorResult "PathB not found: $PathB"
     }
 
+    if ($Engine -eq 'Robocopy' -and $Mode -eq 'Accuracy') {
+        $msg = "Engine 'Robocopy' is a Speed accelerator and cannot hash. Use -Engine Hybrid or Native with -Mode Accuracy."
+        Write-TcStatus -Step Engine -Phase BANNER -Message $msg -Quiet:$Quiet
+        return & $errorResult $msg
+    }
+
     Write-TcStatus -Step Mode -Phase BANNER -Quiet:$Quiet -Message (
         "mode=$Mode engine=$Engine profile=$CompareProfile alignChildRoots=$align"
     )
+
+    if ($Engine -ne 'Native') {
+        $roboResult, $roboError = Invoke-TcRobocopyTreeCompare `
+            -PathA $PathA -PathB $PathB -Mode $Mode -Engine $Engine `
+            -CompareProfile $CompareProfile -Ignore $Ignore `
+            -IgnoreEmptyDirectories:$IgnoreEmptyDirectories `
+            -AlignChildRoots:$align -Detailed:$Detailed -Quiet:$Quiet `
+            -Started $started
+        if ($roboError) {
+            return & $errorResult $roboError
+        }
+        return $roboResult
+    }
 
     Write-TcStatus -Step DictionaryA -Phase START -Quiet:$Quiet
     $dictA = New-TcFileDictionary -Path $PathA -CompareProfile $CompareProfile -Ignore $Ignore `

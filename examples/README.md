@@ -66,3 +66,19 @@ match. A later packager can auto-pick either release ID for that version.
 
 If Speed had returned `TimestampSuspect` (`TimestampOnly=True`), Accuracy
 would still be the content check — ZIP extract often rewrites mtimes.
+
+## Engines
+
+Default remains **Native**. For a faster Speed pass with FAT/DST tolerance:
+
+```powershell
+pwsh -NoProfile -File .\scripts\Invoke-TcCompare.ps1 `
+  -PathA .\Drivers\8860 `
+  -PathB .\Drivers\kit_922757_101.8860 `
+  -Engine Robocopy `
+  -CompareProfile DriverPackage
+```
+
+If Speed is `TimestampSuspect`, confirm bytes with `-Engine Hybrid -Mode Accuracy`
+(Robocopy path/length, Native SHA256). Do not use `-Engine Robocopy -Mode Accuracy`
+— Robocopy is not a hash oracle.

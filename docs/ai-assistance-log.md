@@ -5,6 +5,8 @@ Human-readable disclosure trail for substantive AI-assisted work.
 | When | Phase / scope | Deliverable | Tool / model | Purpose | Verified by |
 |------|---------------|-------------|--------------|---------|-------------|
 <!-- AAI+ -->
+| 2026-09-03 09:01:00 | TC-002 accept | Robocopy + Hybrid engines | Cursor Agent [Tier 2: cursor-grok-4.6] | Named accept; readback TC-VALIDATE-OK | Ville (user `accept`) ≠ claimant |
+| 2026-09-03 06:28:00 | TC-002 Robocopy/Hybrid | Engines + UNILOG parser; validate trio | Cursor Agent [Tier 2: cursor-grok-4.6] | Speed `/L` `/FFT` `/DST`; Hybrid Accuracy Native SHA256; Robocopy Accuracy Error | `TC-VALIDATE-OK` (Pester 18/18; PSA findings=4, errors=0) |
 | 2026-08-27 11:18:00 | v0.1 accept | Tree.Compare v0.1 Native Speed/Accuracy | Cursor Agent [Tier 2: cursor-grok-4.6] | Named accept; TC-VALIDATE-OK Pester 13/13 | Ville (user `accept`) ≠ claimant |
 | 2026-08-24 09:55:00 | release v0.1.0 | First public GitHub cut; P1 ID scrub; VT workflow; README pointers | Cursor Agent [Tier 2: cursor-grok-4.6] | Greenfield publish + SemVer tag | Operator: release, commit, push |
 | 2026-08-21 20:12:00 | lint-pack accept | `.markdownlintignore` + `.vscode/tasks.json` | Cursor Agent [Tier 2: cursor-grok-4.6] | Named-accept closeout; no self-flip | User `accept` |

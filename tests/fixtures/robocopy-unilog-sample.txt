@@ -1,0 +1,11 @@
+	                   3	C:\tc\left\
+	*EXTRA Dir        -1	C:\tc\right\onlyB\
+	  *EXTRA File 		       7	right.txt
+	    New File  		       6	left.txt
+	    Changed   		       2	len.txt
+	    Older     		       7	tweak.txt
+	  New Dir          1	C:\tc\left\onlyA\
+	    New File  		      12	newnested.txt
+	                   1	C:\tc\left\sub\
+	  *EXTRA File 		      14	extra-in-sub.txt
+	    Same      		       6	same.txt

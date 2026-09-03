@@ -14,6 +14,7 @@
         'Resolve-TcEffectiveRoot'
         'New-TcFileDictionary'
         'Get-TcFileSha256'
+        'ConvertFrom-TcRobocopyLog'
         'Compare-TcTree'
         'Get-TcCompareExitCode'
         'Format-TcAgentSummary'

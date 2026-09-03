@@ -16,7 +16,7 @@ function ConvertTo-TcRelativeKey {
     )
 
     $rootFull = [IO.Path]::GetFullPath($Root).TrimEnd('\', '/')
-    $full = [IO.Path]::GetFullPath($FullPath)
+    $full = [IO.Path]::GetFullPath($FullPath).TrimEnd('\', '/')
     if ([string]::Equals($rootFull, $full, [StringComparison]::OrdinalIgnoreCase)) {
         return ''
     }
