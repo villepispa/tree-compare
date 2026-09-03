@@ -12,6 +12,10 @@ the product is unpublished. Latest release is the first numbered section below.
 
 ## [Unreleased]
 
+_Nothing queued — latest release: **0.2.0**._
+
+## [0.2.0] - 2026-09-03
+
 ### Added
 
 - **TC-002**: Robocopy and Hybrid engines. Speed uses list-only `robocopy /L

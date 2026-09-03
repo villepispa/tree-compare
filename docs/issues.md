@@ -11,7 +11,7 @@ Product issue register. IDs are stable (`TC-NNN`). Newest first.
 
 | ID | Title | Status | Notes |
 |----|-------|--------|-------|
-| TC-002 | Robocopy + Hybrid engines | done | Speed `/L` `/FFT` `/DST`; Hybrid Accuracy Native hash. Claimed `TC-VALIDATE-OK` Pester 18/18. Accepted [2026-09-03 09:01:00](../CHANGELOG.md) (user `accept`). Named acceptor Ville ≠ claimant. |
+| TC-002 | Robocopy + Hybrid engines | done | Released **v0.2.0**. Speed `/L` `/FFT` `/DST`; Hybrid Accuracy Native hash. Claimed `TC-VALIDATE-OK` Pester 18/18. Accepted [2026-09-03 09:01:00](../CHANGELOG.md) (user `accept`). Named acceptor Ville ≠ claimant. |
 | TC-001 | Product brief + v0.1 Native scaffold | done | Validate trio; Speed/Accuracy; DriverPackage; first public tag v0.1.0 |
 
 ## Backlog (extra ideas and next steps)

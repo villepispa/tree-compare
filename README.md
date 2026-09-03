@@ -1,8 +1,8 @@
 # Tree.Compare
 
-Headless folder-tree identity compare for packaging automation. First target:
-workstation-vendor **driver packages** that share a version but differ by
-release ID.
+Headless folder-tree identity compare for packaging automation. Engines:
+**Native**, **Robocopy**, and **Hybrid**. First target: workstation-vendor
+**driver packages** that share a version but differ by release ID.
 
 **License:** [MIT](LICENSE) · **Spec:** [docs/product-brief.md](docs/product-brief.md)
 

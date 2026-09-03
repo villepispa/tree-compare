@@ -4,9 +4,7 @@
 
 **Host floor:** PowerShell 7.2+
 **License:** MIT
-**Status:** Latest release **v0.1.0** (Native). Robocopy/Hybrid is staged in
-[CHANGELOG](../CHANGELOG.md) under `[Unreleased]`; bump `ModuleVersion` only
-at the next SemVer cut.
+**Status:** Latest release **v0.2.0** (Native, Robocopy, Hybrid).
 
 ---
 
@@ -25,7 +23,7 @@ for reputation).
 
 ## Scope
 
-### In scope (v0.1.0)
+### In scope (v0.2.0)
 
 | Capability | Notes |
 |------------|-------|
@@ -36,11 +34,6 @@ for reputation).
 | DriverPackage profile | `-CompareProfile DriverPackage` (alias `-Profile`). Ignore `Thumbs.db` / `desktop.ini` / `.DS_Store` / `__MACOSX`; default `-AlignChildRoots` when a root is a single child folder with no files |
 | Status | Mode banner; per-step START/DONE; `-Detailed` lists; `-AgentSummary` |
 | Exit codes | 0 / 1 / 2 / 3 |
-
-### In scope (Unreleased)
-
-| Capability | Notes |
-|------------|-------|
 | Robocopy engine | Speed list-only `/L` `/E` `/FFT` `/DST` `/IS` `/IT` `/XJ`. Extra/New → path-only, Changed → length, Tweaked/Newer/Older → timestamp. Accuracy returns `Error` (not a hash oracle). |
 | Hybrid engine | Robocopy Speed + Native SHA256 in Accuracy. |
 
@@ -93,7 +86,7 @@ segment). Worked Speed-then-Accuracy numbers:
 
 ## Engine
 
-**Native** (v0.1 default) walks each root into a Hashtable.
+**Native** (default) walks each root into a Hashtable.
 
 **Robocopy** is a Speed accelerator: list-only `robocopy /L /E /FFT /DST /IS
 /IT /XJ`. Extra/New → path-only, Changed → length, Tweaked/Newer/Older →
