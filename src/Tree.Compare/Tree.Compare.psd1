@@ -1,6 +1,6 @@
 @{
     RootModule        = 'Tree.Compare.psm1'
-    ModuleVersion     = '0.2.0'
+    ModuleVersion     = '0.2.1'
     GUID              = '3c8e1f52-a9b4-4d06-8e7c-2b1f5a0d9c44'
     Author            = 'Ville Pispa'
     CompanyName       = 'Independent'
@@ -23,7 +23,7 @@
         PSData = @{
             Tags         = @('Compare', 'Hash', 'SHA256', 'Folder', 'Driver', 'Package', 'PowerShell', 'Robocopy')
             LicenseUri   = 'https://opensource.org/licenses/MIT'
-            ReleaseNotes = 'v0.2.0 — Robocopy and Hybrid engines (TC-002).'
+            ReleaseNotes = 'v0.2.1 — AI assistance log renders as one GitHub table.'
         }
     }
 }

@@ -12,7 +12,19 @@ the product is unpublished. Latest release is the first numbered section below.
 
 ## [Unreleased]
 
-_Nothing queued — latest release: **0.2.0**._
+_Nothing queued - latest release: **0.2.1**._
+
+## [0.2.1] - 2026-10-12
+
+### Fixed
+
+- **AI assistance log:** `docs/ai-assistance-log.md` renders as one GitHub table.
+  The `<!-- AAI+ -->` marker sits in the newest row's When cell. A comment on
+  its own line under the header made GitHub show only the header.
+
+### Changed
+
+- **`ModuleVersion`** — `Tree.Compare.psd1` set to `0.2.1` for this release.
 
 ## [0.2.0] - 2026-09-03
 
