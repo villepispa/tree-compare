@@ -9,6 +9,10 @@ Product issue register. IDs are stable (`TC-NNN`). Newest first.
 
 ## Done
 
+Latest release **v0.2.1** (2026-10-12): assistance-log table renders as one
+GitHub table; `ModuleVersion` `0.2.1`. No new `TC-` id. **TC-002** remains
+the **v0.2.0** feature.
+
 | ID | Title | Status | Notes |
 |----|-------|--------|-------|
 | TC-002 | Robocopy + Hybrid engines | done | Released **v0.2.0**. Speed `/L` `/FFT` `/DST`; Hybrid Accuracy Native hash. Claimed `TC-VALIDATE-OK` Pester 18/18. Accepted [2026-09-03 09:01:00](../CHANGELOG.md) (user `accept`). Named acceptor Ville ≠ claimant. |
